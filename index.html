@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NebulaOS</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+overflow:hidden;
+height:100vh;
+background:#050816;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+transition:0.4s;
+}
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:-1;
+}
+
+.container{
+width:92%;
+max-width:1000px;
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,.15);
+border-radius:25px;
+padding:25px;
+box-shadow:0 0 40px rgba(0,255,255,.15);
+animation:fade 1s;
+}
+
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(30px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+h1{
+font-size:40px;
+background:linear-gradient(90deg,#00ffe5,#00b7ff,#8b5cff);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+margin-bottom:10px;
+}
+
+.clock{
+font-size:28px;
+margin-bottom:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:20px;
+}
+
+.card{
+background:rgba(255,255,255,.06);
+border-radius:18px;
+padding:18px;
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-6px);
+box-shadow:0 0 20px cyan;
+}
+
+button{
+padding:12px 18px;
+border:none;
+border-radius:12px;
+cursor:pointer;
+background:linear-gradient(45deg,#00ffe5,#0099ff);
+color:white;
+font-size:15px;
+margin-top:12px;
+transition:.3s;
+}
+
+button:hover{
+transform:scale(1.05);
+}
+
+textarea{
+width:100%;
+height:120px;
+border:none;
+outline:none;
+padding:12px;
+border-radius:12px;
+resize:none;
+margin-top:12px;
+background:rgba(255,255,255,.08);
+color:white;
+}
+
+.wave{
+display:flex;
+align-items:flex-end;
+height:100px;
+gap:5px;
+margin-top:20px;
+}
+
+.bar{
+width:10px;
+background:linear-gradient(#00ffe5,#0088ff);
+border-radius:20px;
+animation:wave 1s infinite ease-in-out;
+}
+
+.bar:nth-child(1){animation-delay:.1s}
+.bar:nth-child(2){animation-delay:.3s}
+.bar:nth-child(3){animation-delay:.5s}
+.bar:nth-child(4){animation-delay:.2s}
+.bar:nth-child(5){animation-delay:.6s}
+.bar:nth-child(6){animation-delay:.1s}
+.bar:nth-child(7){animation-delay:.4s}
+.bar:nth-child(8){animation-delay:.8s}
+.bar:nth-child(9){animation-delay:.2s}
+.bar:nth-child(10){animation-delay:.5s}
+
+@keyframes wave{
+0%,100%{height:20px}
+50%{height:90px}
+}
+
+.light{
+background:#eef5ff;
+color:#111;
+}
+
+.light .container{
+background:rgba(255,255,255,.55);
+}
+
+.light textarea{
+color:black;
+}
+
+footer{
+text-align:center;
+margin-top:20px;
+opacity:.7;
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="container">
+
+<h1>NebulaOS</h1>
+
+<div class="clock" id="clock"></div>
+
+<div class="grid">
+
+<div class="card">
+
+<h2>✨ Inspiration</h2>
+
+<p id="quote"></p>
+
+<button onclick="newQuote()">Neue Idee</button>
+
+</div>
+
+<div class="card">
+
+<h2>📝 Notes</h2>
+
+<textarea id="notes"></textarea>
+
+<button onclick="saveNotes()">Speichern</button>
+
+</div>
+
+<div class="card">
+
+<h2>🎵 Audio Visualizer</h2>
+
+<div class="wave">
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>⚙️ Optionen</h2>
+
+<button onclick="toggleTheme()">Dark / Light</button>
+
+</div>
+
+</div>
+
+<footer>
+Made by ChatGPT • HTML • CSS • JS
+</footer>
+
+</div>
+
+<script>
+const quotes=[
+"Code is poetry.",
+"Dream big. Build bigger.",
+"Creativity beats complexity.",
+"Every bug is a hidden lesson.",
+"Small ideas become giant projects.",
+"The future belongs to builders.",
+"Think. Design. Create.",
+"AI + Human = Unlimited."
+];
+
+function newQuote(){
+document.getElementById("quote").textContent=
+quotes[Math.floor(Math.random()*quotes.length)];
+}
+
+newQuote();
+
+function clock(){
+const d=new Date();
+document.getElementById("clock").textContent=
+d.toLocaleTimeString();
+}
+
+setInterval(clock,1000);
+clock();
+
+function saveNotes(){
+localStorage.setItem("notes",
+document.getElementById("notes").value);
+alert("Gespeichert!");
+}
+
+document.getElementById("notes").value=
+localStorage.getItem("notes")||"";
+
+function toggleTheme(){
+document.body.classList.toggle("light");
+}
+
+// PARTICLES
+
+const canvas=document.getElementById("bg");
+const ctx=canvas.getContext("2d");
+
+function resize(){
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+}
+
+resize();
+
+window.onresize=resize;
+
+let particles=[];
+
+for(let i=0;i<150;i++){
+particles.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+r:Math.random()*2+1,
+dx:(Math.random()-.5),
+dy:(Math.random()-.5)
+});
+}
+
+function animate(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+particles.forEach(p=>{
+
+ctx.beginPath();
+ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+ctx.fillStyle="rgba(0,255,255,.8)";
+ctx.fill();
+
+p.x+=p.dx;
+p.y+=p.dy;
+
+if(p.x<0)p.x=canvas.width;
+if(p.x>canvas.width)p.x=0;
+if(p.y<0)p.y=canvas.height;
+if(p.y>canvas.height)p.y=0;
+
+});
+
+requestAnimationFrame(animate);
+
+}
+
+animate();
+</script>
+
+</body>
+</html>
